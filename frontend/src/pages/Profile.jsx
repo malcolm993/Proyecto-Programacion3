@@ -6,11 +6,11 @@ const Profile = () => {
   const { email, verified, createdAt } = user;
   return (
     <Center mt={16} flexDir="column">
-      <Heading mb={4}>My Account</Heading>
+      <Heading mb={4}>Mi cuenta</Heading>
       {!verified && (
         <Alert status="warning" w="fit-content" borderRadius={12} mb={3}>
           <AlertIcon />
-          Please verify your email
+          Por favor verifica tu correo electrónico
         </Alert>
       )}
       <Text color="white" mb={2}>
@@ -20,9 +20,9 @@ const Profile = () => {
         </Text>
       </Text>
       <Text color="white">
-        Created on{" "}
+        Creada en {" "}
         <Text as="span" color="gray.300">
-          {new Date(createdAt).toLocaleDateString("en-US")}
+          {new Date(createdAt).toLocaleDateString("es-ES")}
         </Text>
       </Text>
     </Center>
