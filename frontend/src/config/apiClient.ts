@@ -1,6 +1,6 @@
 import axios from "axios";
 import queryClient from "./queryClient";
-import { UNAUTHORIZED } from "../constants/http.mjs";
+import { UNAUTHORIZED } from "../constants/http.js";
 import { navigate } from "../lib/navigation";
 
 const options = {

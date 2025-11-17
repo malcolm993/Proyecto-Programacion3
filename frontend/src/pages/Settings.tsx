@@ -6,12 +6,12 @@ const Settings = () => {
   const { sessions, isPending, isSuccess, isError } = useSessions();
   return (
     <Container mt={16}>
-      <Heading mb={6}>My Sessions</Heading>
+      <Heading mb={6}>Mis sesiones</Heading>
       {isPending && <Spinner />}
-      {isError && <Text color="red.400">Failed to get sessions.</Text>}
+      {isError && <Text color="red.400">Error al obtener las sesiones.</Text>}
       {isSuccess && (
         <VStack spacing={3} align="flex-start">
-          {sessions.map((session) => (
+          {sessions.map((session: any) => (
             <SessionCard key={session._id} session={session} />
           ))}
         </VStack>
