@@ -15,7 +15,11 @@ import {
 } from "@chakra-ui/react";
 import { resetPassword } from "../lib/api";
 
-const ResetPasswordForm = ({ code }) => {
+interface ResetPasswordFormProps {
+  code: string;
+}
+
+const ResetPasswordForm = ({ code }: ResetPasswordFormProps) => {
   const [password, setPassword] = useState("");
   const {
     mutate: resetUserPassword,

@@ -1,6 +1,7 @@
 import { Container, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
 import useSessions from "../hooks/useSessions";
 import SessionCard from "../components/SessionCard";
+import { Session } from "../types/Session";
 
 const Settings = () => {
   const { sessions, isPending, isSuccess, isError } = useSessions();
@@ -11,7 +12,7 @@ const Settings = () => {
       {isError && <Text color="red.400">Error al obtener las sesiones.</Text>}
       {isSuccess && (
         <VStack spacing={3} align="flex-start">
-          {sessions.map((session: any) => (
+          {sessions.map((session: Session) => (
             <SessionCard key={session._id} session={session} />
           ))}
         </VStack>

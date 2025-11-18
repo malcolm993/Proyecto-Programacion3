@@ -1,5 +1,7 @@
-export let navigate = () => {};
+type NavigateFunction = (to: string) => void;
 
-export const setNavigate = (fn) => {
+export let navigate: NavigateFunction = () => {};
+
+export const setNavigate = (fn: NavigateFunction) => {
   navigate = fn;
 };

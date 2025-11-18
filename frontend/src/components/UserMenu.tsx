@@ -1,30 +1,36 @@
-import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useLogout } from "../hooks/useLogout";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../lib/api";
 
 const UserMenu = () => {
+  const { logout } = useLogout();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { mutate: signOut } = useMutation({
-    mutationFn: logout,
-    onSettled: () => {
-      queryClient.clear();
-      navigate("/login", { replace: true });
-    },
-  });
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
+  const handleSettings = () => {
+    navigate("/settings");
+  };
 
   return (
-    <Menu isLazy placement="right-start">
-      <MenuButton position="absolute" left="1.5rem" bottom="1.5rem">
-        <Avatar src="#" />
+    <Menu>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+        My Account
       </MenuButton>
       <MenuList>
-        <MenuItem onClick={() => navigate("/")}>Perfil</MenuItem>
-        <MenuItem onClick={() => navigate("/settings")}>Configuración</MenuItem>
-        <MenuItem onClick={signOut}>Cerrar sesión</MenuItem>
+        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+        <MenuItem onClick={handleSettings}>Settings</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </MenuList>
     </Menu>
   );
 };
+
 export default UserMenu;

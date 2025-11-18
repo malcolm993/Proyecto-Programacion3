@@ -1,107 +1,132 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
 import {
-  Flex,
   Box,
+  Button,
+  Container,
   FormControl,
   FormLabel,
-  Input,
-  Stack,
-  Button,
   Heading,
+  Input,
+  Select,
   Text,
-  Link as ChakraLink,
-  Container,
+  VStack,
 } from "@chakra-ui/react";
-import { register } from "../lib/api";
+import { useRegister } from "../hooks/useRegister";
+import { Link, useNavigate } from "react-router-dom";
+
+interface RegisterForm {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: "organizer" | "participant";
+}
 
 const Register = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const {
-    mutate: createAccount,
-    isPending,
-    isError,
-    error,
-  } = useMutation({
-    mutationFn: register,
-    onSuccess: () => {
-      navigate("/", {
-        replace: true,
-      });
-    },
+  const [form, setForm] = useState<RegisterForm>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "participant",
   });
+
+  const { register, isPending, isError, error } = useRegister();
+  const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords don't match");
+      return;
+    }
+
+    const { confirmPassword, ...registerData } = form;
+    const success = await register(registerData);
+    
+    if (success) {
+      navigate("/login");
+    }
+  };
+
   return (
-    <Flex minH="100vh" align="center" justify="center">
-      <Container mx="auto" maxW="md" py={12} px={6} textAlign="center">
-        <Heading fontSize="4xl" mb={6}>
-          Create an account
-        </Heading>
-        <Box rounded="lg" bg="gray.700" boxShadow="lg" p={8}>
-          {isError && (
-            <Box mb={3} color="red.400">
-              {error?.message || "An error occurred"}
-            </Box>
-          )}
-          <Stack spacing={4}>
-            <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoFocus
-              />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Text color="text.muted" fontSize="xs" textAlign="left" mt={2}>
-                - Must be at least 6 characters long.
-              </Text>
-            </FormControl>
-            <FormControl id="confirmPassword">
-              <FormLabel>Confirm Password</FormLabel>
-              <Input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onKeyDown={(e) =>
-                  e.key === "Enter" &&
-                  createAccount({ email, password, confirmPassword })
-                }
-              />
-            </FormControl>
-            <Button
-              my={2}
-              isLoading={isPending}
-              isDisabled={
-                !email || password.length < 6 || password !== confirmPassword
-              }
-              onClick={() =>
-                createAccount({ email, password, confirmPassword })
-              }
-            >
-              Create Account
-            </Button>
-            <Text align="center" fontSize="sm" color="text.muted">
-              Already have an account?{" "}
-              <ChakraLink as={Link} to="/login">
-                Sign in
-              </ChakraLink>
-            </Text>
-          </Stack>
-        </Box>
-      </Container>
-    </Flex>
+    <Container maxW="md" mt={16}>
+      <VStack spacing={6} as="form" onSubmit={handleSubmit}>
+        <Heading size="lg">Create Account</Heading>
+
+        <FormControl isRequired>
+          <FormLabel>Name</FormLabel>
+          <Input
+            name="name"
+            type="text"
+            value={form.name}
+            onChange={handleChange}
+          />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Email</FormLabel>
+          <Input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+          />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+          />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Confirm Password</FormLabel>
+          <Input
+            name="confirmPassword"
+            type="password"
+            value={form.confirmPassword}
+            onChange={handleChange}
+          />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Role</FormLabel>
+          <Select name="role" value={form.role} onChange={handleChange}>
+            <option value="participant">Participant</option>
+            <option value="organizer">Organizer</option>
+          </Select>
+        </FormControl>
+
+        {isError && (
+          <Text color="red.400" textAlign="center">
+            {error?.message || "Registration failed"}
+          </Text>
+        )}
+
+        <Button type="submit" isLoading={isPending} width="full">
+          Register
+        </Button>
+
+        <Text>
+          Already have an account?{" "}
+          <Link to="/login" style={{ color: "blue.400" }}>
+            Log in
+          </Link>
+        </Text>
+      </VStack>
+    </Container>
   );
 };
+
 export default Register;

@@ -1,7 +1,12 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import useDeleteSession from "../hooks/useDeleteSession";
+import { Session } from "../types/Session";
 
-const SessionCard = ({ session }) => {
+interface SessionCardProps {
+  session: Session;
+}
+
+const SessionCard = ({ session }: SessionCardProps) => {
   const { _id, createdAt, userAgent, isCurrent } = session;
 
   const { deleteSession, isPending } = useDeleteSession(_id);
@@ -26,7 +31,7 @@ const SessionCard = ({ session }) => {
           fontSize="xl"
           color="red.400"
           title="Delete Session"
-          onClick={deleteSession}
+          onClick={() => deleteSession()}
           isLoading={isPending}
         >
           &times;

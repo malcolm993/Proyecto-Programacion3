@@ -1,31 +1,30 @@
-import { Alert, AlertIcon, Center, Heading, Text } from "@chakra-ui/react";
-import useAuth from "../hooks/useAuth";
+import { Container, Heading, Text, VStack } from "@chakra-ui/react";
+import useUser from "../hooks/useUser";
 
 const Profile = () => {
-  const { user } = useAuth();
-  const { email, verified, createdAt } = user;
+  const { user } = useUser();
+
+  const { email, verified, createdAt } = user || {};
+
   return (
-    <Center mt={16} flexDir="column">
-      <Heading mb={4}>Mi cuenta</Heading>
-      {!verified && (
-        <Alert status="warning" w="fit-content" borderRadius={12} mb={3}>
-          <AlertIcon />
-          Por favor verifica tu correo electrónico
-        </Alert>
-      )}
-      <Text color="white" mb={2}>
-        Email:{" "}
-        <Text as="span" color="gray.300">
-          {email}
-        </Text>
-      </Text>
-      <Text color="white">
-        Creada en {" "}
-        <Text as="span" color="gray.300">
-          {new Date(createdAt).toLocaleDateString("es-ES")}
-        </Text>
-      </Text>
-    </Center>
+    <Container maxW="md" mt={16}>
+      <VStack spacing={6} align="flex-start">
+        <Heading size="lg">Profile</Heading>
+        
+        <VStack align="flex-start" spacing={3}>
+          <Text>
+            <strong>Email:</strong> {email}
+          </Text>
+          <Text>
+            <strong>Verified:</strong> {verified ? "Yes" : "No"}
+          </Text>
+          <Text>
+            <strong>Member since:</strong> {createdAt ? new Date(createdAt).toLocaleDateString() : "N/A"}
+          </Text>
+        </VStack>
+      </VStack>
+    </Container>
   );
 };
+
 export default Profile;

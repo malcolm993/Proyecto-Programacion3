@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSessions } from "../lib/api";
+import { Session } from "../types/Session"; // ← Importar Session
 
 export const SESSIONS = "sessions";
 
 const useSessions = (opts = {}) => {
-  const { data: sessions = [], ...rest } = useQuery({
+  const { data: sessions = [], ...rest } = useQuery<Session[]>({ // ← Agregar <Session[]>
     queryKey: [SESSIONS],
     queryFn: getSessions,
     ...opts,
